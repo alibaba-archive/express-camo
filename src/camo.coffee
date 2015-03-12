@@ -14,10 +14,10 @@ redisStore = require './store'
 camo = (options = {}) ->
 
   _options = utilLib._extend
-    tmpDir: path.join __dirname, '../tmp'   # Save files to the tmp directory
+    tmpDir: path.join __dirname, '../tmp'   # Save files to the tmp directory, this will also be the nginx alias property
     expire: 86400000                        # Save the file for the expire milliseconds
-    urlPrefix: '/camo'
-    getUrl: (req) -> req.query.url
+    urlPrefix: '/camo'                      # The url prefix in nginx location block
+    getUrl: (req) -> req.query.url          # Get url param by your way
   , options
 
   # Initialize mime store
