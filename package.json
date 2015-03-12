@@ -1,17 +1,17 @@
 {
-  "name": "file-proxy",
+  "name": "express-camo",
   "version": "0.0.0",
   "description": "file-proxy",
-  "main": "./lib/index.js",
+  "main": "./lib/camo.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha --require coffee-script/register --require should --reporter spec test/main.coffee"
+    "test": "rm -rf tmp/* && NODE_ENV=test ./node_modules/.bin/mocha --require coffee-script/register --require should --reporter spec test/main.coffee"
   },
   "repository": {
     "type": "git",
-    "url": "git@code.teambition.com:server/file-proxy.git"
+    "url": "git@github.com:teambition/express-camo.git"
   },
   "author": {
     "name": "Xu Jingxin",
@@ -20,7 +20,13 @@
   "license": "MIT",
   "devDependencies": {
     "coffee-script": "^1.9.1",
+    "express": "^4.12.2",
     "mocha": "^2.2.1",
-    "should": "^5.1.0"
+    "should": "^5.1.0",
+    "supertest": "^0.15.0"
+  },
+  "dependencies": {
+    "hiredis": "^0.2.0",
+    "redis": "^0.12.1"
   }
 }
