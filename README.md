@@ -33,5 +33,5 @@ store:                                  # Define your store or use the default r
 [npm-url]: https://npmjs.org/package/express-camo
 [npm-image]: http://img.shields.io/npm/v/express-camo.svg
 
-[travis-url]: https://travis-ci.org/sailxjx/express-camo
-[travis-image]: http://img.shields.io/travis/sailxjx/express-camo.svg
+[travis-url]: https://travis-ci.org/teambition/express-camo
+[travis-image]: http://img.shields.io/travis/teambition/express-camo.svg
