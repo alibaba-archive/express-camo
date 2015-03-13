@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "hiredis": "^0.2.0",
-    "redis": "^0.12.1"
+    "redis": "^0.12.1",
+    "request": "^2.53.0"
   }
 }

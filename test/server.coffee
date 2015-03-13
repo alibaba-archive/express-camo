@@ -17,6 +17,9 @@ app.get '/:file', (req, res) ->
   res.set 'Content-Type', mimeTypes[path.extname(req.params.file)]
   res.sendFile filePath
 
+app.get '/rdr/:file', (req, res) ->
+  res.redirect 302, "/#{req.params.file}"
+
 http.createServer(app).listen 3001
 
 httpOptions =
