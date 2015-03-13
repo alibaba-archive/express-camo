@@ -3,6 +3,9 @@ should = require 'should'
 request = require 'supertest'
 express = require 'express'
 camo = require '../src/camo'
+server = require './server'
+
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
 assert = (baseName) ->
 
@@ -21,7 +24,7 @@ describe 'Basic proxy', ->
 
   it 'should get the image from http url and set the correct content-type', (done) ->
 
-    url = "http://h.hiphotos.baidu.com/image/pic/item/d788d43f8794a4c22a6aaa2a0cf41bd5ad6e3961.jpg"
+    url = "http://localhost:3001/1.jpg"
 
     _baseName = "#{camo.util.md5(url)}#{path.extname(url)}"
 
@@ -41,7 +44,7 @@ describe 'Basic proxy', ->
 
   it 'should get the image from https url and set the correct content-type', (done) ->
 
-    url = "https://education.github.com/assets/sdp-backpack-0c38cf04554c7f4d019e62abf3a0bffd.png"
+    url = "https://localhost:3002/2.png"
 
     _baseName = "#{camo.util.md5(url)}#{path.extname(url)}"
 
@@ -61,7 +64,7 @@ describe 'Basic proxy', ->
 
   it 'should get the image from local file system when the file exists', (done) ->
 
-    url = "http://h.hiphotos.baidu.com/image/pic/item/d788d43f8794a4c22a6aaa2a0cf41bd5ad6e3961.jpg"
+    url = "http://localhost:3001/1.jpg"
 
     _baseName = "#{camo.util.md5(url)}#{path.extname(url)}"
 

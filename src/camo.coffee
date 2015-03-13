@@ -7,6 +7,7 @@ path = require 'path'
 fs = require 'fs'
 util = require './util'
 utilLib = require 'util'
+urlLib = require 'url'
 http = require 'http'
 https = require 'https'
 redisStore = require './store'
@@ -54,8 +55,12 @@ camo = (options = {}) ->
           when url.indexOf('https://') is 0 then httpLib = https
           else httpLib = http
 
-        httpLib
+        _errHandler = (err) ->
+          file.close()
+          fs.unlink filePath
+          next err
 
+        httpLib
         .get url, (_res) ->
           if _res.statusCode is 200 and _res.headers?['content-type']
             mime = _res.headers['content-type']
@@ -69,9 +74,10 @@ camo = (options = {}) ->
               res.set 'X-Accel-Redirect', redirectPath
               res.end()
           else
-            next(new Error('request failed'))
+            _errHandler(new Error('request failed'))
 
-        .on 'error', next
+        .on 'error', _errHandler
+
         .end()
 
 camo.util = util
