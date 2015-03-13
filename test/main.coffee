@@ -22,7 +22,6 @@ describe 'Basic proxy', ->
 
   app.use camo
     store: fakeStore
-    expire: 500
 
   it 'should get the image from http url and set the correct content-type', (done) ->
 
@@ -102,25 +101,50 @@ describe 'Basic proxy', ->
       res.statusCode.should.eql 200
       done err
 
-  it 'should expire after 500 milliseconds', (done) ->
+describe 'Option expire', ->
 
-    url = 'http://localhost:3001/http.jpg'
+  app = express()
+
+  app.use camo
+    store: fakeStore
+    expire: 200
+
+  it 'should expire after 200 milliseconds', (done) ->
+
+    url = 'http://localhost:3001/expire.jpg'
     _baseName = getBaseName url
-    # Should set the new mime type of the old file
-    assert = (baseName, mime, callback) ->
-      baseName.should.eql _baseName
-      mime.should.eql 'image/jpeg'
-      callback null, mime
 
-    setTimeout ->
-      request(app)
-      .get "?url=#{url}"
-      .end (err, res) ->
-        res.headers['content-type'].should.eql 'image/jpeg'
-        res.headers['x-accel-redirect'].should.containEql _baseName
-        res.statusCode.should.eql 200
-        done err
-    , 500
+    # Reset assert function
+    assert = ->
+
+    request(app).get "?url=#{url}"
+
+    .end (err, res) ->
+      should(err).eql null
+
+      # Should set the new mime type of the old file
+      assert = (baseName, mime, callback) ->
+        baseName.should.eql _baseName
+        mime.should.eql 'image/jpeg'
+        callback null, mime
+
+      setTimeout ->
+        request(app)
+        .get "?url=#{url}"
+        .end (err, res) ->
+          res.headers['content-type'].should.eql 'image/jpeg'
+          res.headers['x-accel-redirect'].should.containEql _baseName
+          res.statusCode.should.eql 200
+          done err
+      , 200
+
+describe 'Option getUrl', ->
+
+  app = express()
+
+  app.use '/camo/:file', camo
+    store: fakeStore
+    getUrl: (req) -> new Buffer(req.params.file, 'base64').toString()
 
   it 'should parse the base64ed url from getUrl option', (done) ->
 
@@ -128,18 +152,12 @@ describe 'Basic proxy', ->
 
     _baseName = getBaseName url
 
-    _app = express()
-
-    _app.use '/camo/:file', camo
-      store: fakeStore
-      getUrl: (req) -> new Buffer(req.params.file, 'base64').toString()
-
     assert = (baseName, mime, callback) ->
       baseName.should.eql _baseName
       mime.should.eql 'image/jpeg'
       callback null, mime
 
-    request(_app)
+    request(app)
     .get "/camo/#{new Buffer(url).toString('base64')}"
     .end (err, res) ->
       res.headers['content-type'].should.eql 'image/jpeg'
