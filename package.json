@@ -18,6 +18,12 @@
     "name": "Xu Jingxin",
     "email": "sailxjx@gmail.com"
   },
+  "keywords": [
+    "proxy",
+    "express",
+    "nginx",
+    "files"
+  ],
   "license": "MIT",
   "devDependencies": {
     "coffee-script": "^1.9.1",
