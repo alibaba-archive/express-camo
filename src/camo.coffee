@@ -50,11 +50,13 @@ camo = (options = {}) ->
           fs.unlink filePath
           next err
 
-        request.get url
+        request.get
+          url: url
+          headers: 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36'
 
         .on 'response', (_res) ->
 
-          if _res.statusCode is 200
+          if _res.statusCode >= 200 and _res.statusCode < 300
 
             if _res.headers?['content-type']
               mime = _res.headers['content-type']
