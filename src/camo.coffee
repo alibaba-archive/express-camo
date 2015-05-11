@@ -31,7 +31,8 @@ camo = (options = {}) ->
 
     fs.mkdirSync _tmpDir unless fs.existsSync _tmpDir
 
-    baseName = "#{util.md5(url)}#{path.extname(url)}"
+    # Base name should only contain letters
+    baseName = "#{util.md5(url)}#{path.extname(url).match(/^\.[0-9a-z]+/i)[0] or ''}"
     filePath = path.join _tmpDir, baseName
     redirectPath = path.join urlPrefix, basePath, baseName
 

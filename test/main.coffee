@@ -8,7 +8,7 @@ server = require './server'
 # Support for self-signed certificate
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
-getBaseName = (url) -> "#{camo.util.md5(url)}#{path.extname(url)}"
+getBaseName = (url) -> "#{camo.util.md5(url)}#{path.extname(url).match(/^\.[0-9a-z]+/i)[0] or ''}"
 
 assert = (baseName) ->
 
@@ -89,6 +89,26 @@ describe 'Basic proxy', ->
     _baseName = getBaseName url
 
     assert = (baseName, mime, callback) ->
+      baseName.should.eql _baseName
+      mime.should.eql 'image/jpeg'
+      callback null, mime
+
+    request(app)
+    .get "?url=#{url}"
+    .end (err, res) ->
+      res.headers['content-type'].should.eql 'image/jpeg'
+      res.headers['x-accel-redirect'].should.containEql _baseName
+      res.statusCode.should.eql 200
+      done err
+
+  it 'should get the image when url contains question mark', (done) ->
+
+    url = 'http://localhost:3001/rdr/302.jpg?v1'
+
+    _baseName = getBaseName url
+
+    assert = (baseName, mime, callback) ->
+      baseName.should.not.containEql '?'
       baseName.should.eql _baseName
       mime.should.eql 'image/jpeg'
       callback null, mime
