@@ -8,7 +8,7 @@ server = require './server'
 # Support for self-signed certificate
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
-getBaseName = (url) -> "#{camo.util.md5(url)}#{path.extname(url).match(/^\.[0-9a-z]+/i)[0] or ''}"
+getBaseName = (url) -> "#{camo.util.md5(url)}#{path.extname(url).match(/^\.[0-9a-z]+/i)?[0] or ''}"
 
 assert = (baseName) ->
 
