@@ -1,6 +1,6 @@
 {
   "name": "express-camo",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "file-proxy",
   "main": "./lib/camo.js",
   "directories": {
