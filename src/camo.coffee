@@ -13,12 +13,13 @@ camo = (options = {}) ->
     expire: 86400000                        # Save the file for the expire milliseconds
     urlPrefix: '/camo'                      # The url prefix in nginx location block
     getUrl: (req) -> req.query.url          # Get url param by your way
+    onError: false                          # Error handler when fire an error
   , options
 
   # Initialize mime store
   store = _options.store or redisStore(require('redis').createClient())(_options)
 
-  {tmpDir, expire, urlPrefix} = _options
+  {tmpDir, expire, urlPrefix, onError} = _options
 
   _camo = (req, res, next) ->
 
@@ -49,6 +50,8 @@ camo = (options = {}) ->
         _errHandler = (err) ->
           file.close()
           fs.unlink filePath
+          if toString.call(onError) is '[object Function]'
+            return onError err, req, res, next
           next err
 
         request.get
