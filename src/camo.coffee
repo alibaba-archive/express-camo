@@ -36,18 +36,22 @@ camo = (options = {}) ->
     baseName = "#{util.md5(url)}#{path.extname(url).match(/^\.[0-9a-z]+/i)?[0] or ''}"
     filePath = path.join _tmpDir, baseName
     redirectPath = path.join urlPrefix, basePath, baseName
+    responsed = false
 
     fs.exists filePath, (exists) ->
       if exists
         store.getMime baseName, (err, mime) ->
+          return if responsed
           res.set 'Content-Type', mime if mime
           res.set 'X-Accel-Redirect', redirectPath
+          responsed = true
           res.end()
       else
         file = fs.createWriteStream filePath
         mime = null
 
         _errHandler = (err) ->
+          return if responsed
           file.close()
           fs.unlink filePath
           if toString.call(onError) is '[object Function]'
@@ -68,8 +72,10 @@ camo = (options = {}) ->
 
             file.on 'finish', ->
               file.close()
+              return if responsed
               res.set 'Content-Type', mime if mime
               res.set 'X-Accel-Redirect', redirectPath
+              responsed = true
               res.end()
             _res.pipe file
 
