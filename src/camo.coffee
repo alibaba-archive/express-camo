@@ -52,8 +52,9 @@ camo = (options = {}) ->
 
         _errHandler = (err) ->
           return if responsed
+          responsed = true
           file.close()
-          fs.unlink filePath
+          fs.unlink filePath, -> # Ignore callback errors
           if toString.call(onError) is '[object Function]'
             return onError err, req, res, next
           next err
